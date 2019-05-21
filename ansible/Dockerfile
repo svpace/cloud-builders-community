@@ -1,9 +1,9 @@
-ARG BASE_IMAGE=alpine:edge
-FROM ${BASE_IMAGE}
+FROM python:3-alpine
 
-ARG ANSIBLE_VERSION=2.7.0-r1
-
-RUN apk add --update ansible openssh-client && \
+RUN \
+    apk --update add --virtual build-dependencies python-dev libffi-dev openssl-dev build-base && \
+    pip install --no-cache-dir ansible && \
+    apk del build-dependencies && \
     rm -rf /var/cache/apk/*
 
 ENTRYPOINT ["/usr/bin/ansible-playbook"]
